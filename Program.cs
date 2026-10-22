@@ -1,259 +1,278 @@
-﻿namespace ConsoleApp1
+﻿using System;
+using System.Threading;
+using System.Linq;
+using Random = System.Random;
+using String = System.String;
+namespace ConsoleApp1
 {
-    static class Konzol
+    static class Jatek
     {
-        public static void Cim(string szoveg)
-        {
-            Console.ForegroundColor = ConsoleColor.Magenta;
-            Console.WriteLine($"═══ {szoveg} ═══");
-            Console.ResetColor();
-        }
-
-        public static void Siker(string szoveg)
-        {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"✔ {szoveg}");
-            Console.ResetColor();
-        }
-
-        public static void Hiba(string szoveg)
+        public static void SzamJatek()
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"✘ {szoveg}");
-            Console.ResetColor();
-        }
-    }
-
-
-    internal class Program
-    {
-        static void Main(string[] args)
-        {   // 1. Feladat.
-            Console.WriteLine("Add meg a korodat: ");
-            int kor = Convert.ToInt32(Console.ReadLine());
-            if (kor <= 17)
-            {
-                Console.WriteLine($"Még nem vagy nagykorú! {18 - kor} év múlva leszel nagykorú.");
-            }
-            else
-            {
-                Console.WriteLine("Már nagykorú vagy!");
-            }
-            // 2. Feladat.
-            Console.WriteLine("Adj meg egy egész számot: ");
-            int szam = Convert.ToInt32(Console.ReadLine());
-            string ternary = (szam % 2 == 0) ? "páros" : "páratlan";
-            Console.WriteLine($"Ez a szám {ternary}.");
-            //3. Feladat.
-            Console.WriteLine("Adj meg egy jelszót: ");
-            string jelszo = Console.ReadLine();
-            ternary = (jelszo == "tengerpart") ? "Belépés engedélyezve." : "Hibás jelszó.";
-            if (ternary == "Belépés engedélyezve.")
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine(ternary);
-                Console.ForegroundColor = ConsoleColor.White;
-            }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(ternary);
-                Console.ForegroundColor = ConsoleColor.White;
-            }
-            // 4. Feladat.
-            Console.WriteLine("Add meg a rendelés értékét: ");
-            int rendelesErtek = Convert.ToInt32(Console.ReadLine());
-            ternary = (rendelesErtek >= 15000) ? "Ingyenes szállítás." : "Szállítási díj: 1490 Ft.";
-            if (rendelesErtek >= 15000)
-            {
-                Console.WriteLine($"A küldeményedet ingyenesen szállítjuk! Végösszeg: {rendelesErtek:N2} Ft.");
-            }
-            else
-            {
-                Console.WriteLine($"A küldeményed szállítási díja: 1490 Ft. Végösszeg: {rendelesErtek + 1490:N2} Ft.");
-            }
-            // 5. Feladat.
-            Console.WriteLine("Adj meg 2 (akár tört) számot, egymás után, enterrel elválasztva: ");
-            double szam1 = Convert.ToDouble(Console.ReadLine());
-            double szam2 = Convert.ToDouble(Console.ReadLine());
-            ternary = (szam1 > szam2) ? $"A nagyobb szám: {szam1}" : (szam1 < szam2) ? $"A nagyobb szám: {szam2}" : "A két szám egyenlő.";
-            Console.WriteLine(ternary);
-            // 6. Feladat.
-            Console.WriteLine("Kérled adj meg egy egész számot: ");
+            Console.WriteLine($"\nSzabályok: \n10 próbálkozásod van, hogy kitaláld a számot 0 és 100 között. \nHa eltalálod a számot, gratulálunk! \nHa nem, akkor a program törli a systam mappádat (windows) vagy a root mappádat (linux)");
+            Console.ForegroundColor = ConsoleColor.White;
+            bool jatek = true;
             while (true)
             {
-                if (true == int.TryParse(Console.ReadLine(), out int szam3))
+                int szam = Random.Shared.Next(0, 100);
+                int probalkozasok = 10;
+                Console.WriteLine("\nJöhet a kövi kör!");
+                for (probalkozasok = 11; probalkozasok > 0; --probalkozasok)
                 {
-                    Console.WriteLine($"A szám duplája: {szam3 * 2}, a négyzete pedig: {szam3 * szam3}");
-                    break;
+                    if (probalkozasok == 1)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Sajnos nem találtad el a számot!");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        break;
+                    }
+                    Console.WriteLine($"Add meg a tippedet, (még {probalkozasok - 1} probálkozasod van)!");
+                    bool siker = false;
+                    int tipp = 0;
+                    while (!siker)
+                    {
+                        siker = int.TryParse(Console.ReadLine(), out tipp);
+                        if (tipp > 101 || tipp < 0)
+                        {
+                            siker = false;
+                        }
+                    }
+                    if (tipp == 101)
+                    {
+                        Console.ForegroundColor = ConsoleColor.DarkGreen;
+                        Console.WriteLine($"Köszönjük a játékot! A szám az {szam} volt. A program most bezárul.");
+                        Thread.Sleep(3000);
+                        Console.BackgroundColor = ConsoleColor.White;
+                        Console.Clear();
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        for (int i = 0; i < 10; i++)
+                        {
+                            Console.WriteLine($"Éppen törlődnek a rendszerfájlaid!");
+                            string betoltes = System.String.Concat(Enumerable.Repeat("██", i));
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.Write($"\nProgress: ");
+                            Console.ForegroundColor = ConsoleColor.Black;
+                            Console.Write(betoltes);
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Thread.Sleep(2000);
+                            Console.Clear();
+                        }
+                        Console.BackgroundColor = ConsoleColor.Black;
+                        Environment.Exit(101);
+                    }
+                    else if (tipp > szam)
+                    {
+                        if (tipp - szam >= 21)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.WriteLine($"Még messze vagy! (Nagyobb a tipped)");
+                            Console.ForegroundColor = ConsoleColor.White;
+                        }
+                        else if (tipp - szam >= 6)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Magenta;
+                            Console.WriteLine($"Már nem vagy olyan messze! (Nagyobb a tipped)");
+                            Console.ForegroundColor = ConsoleColor.White;
+                        }
+                        else if (tipp - szam >= 1)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine($"Nagyon közel vagy! (Nagyobb a tipped)");
+                            Console.ForegroundColor = ConsoleColor.White;
+                        }
+                        Thread.Sleep(3000);
+                        Console.Clear();
+                    }
+                    else if (tipp < szam)
+                    {
+                        if (szam - tipp >= 21)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.WriteLine($"Még messze vagy! (Kisebb a tipped)");
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Thread.Sleep(3000);
+                            Console.Clear();
+                        }
+                        else if (szam - tipp >= 6)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Magenta;
+                            Console.WriteLine($"Már nem vagy olyan messze! (Kisebb a tipped)");
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Thread.Sleep(3000);
+                            Console.Clear();
+                        }
+                        else if (szam - tipp >= 1)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine($"Nagyon közel vagy! (Kisebb a tipped)");
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Thread.Sleep(3000);
+                            Console.Clear();
+                        }
+                    }
+                    else if (tipp == szam)
+                    {
+                        Console.WriteLine($"Gratulálunk! Eltaláltad a számot, ami {szam} volt!");
+                        Thread.Sleep(3000);
+                        Console.Clear();
+                        break;
+                    }
+                    Thread.Sleep(2000);
+                    Console.Clear();
+
+
+                }
+                Console.Clear();
+                Console.WriteLine("Szeretnél tolni még egy menetet? i/n?");
+                string karakter = Console.ReadLine();
+                if (karakter == "n")
+                {
+                    Environment.Exit(0);
                 }
                 else
-                {   
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Ez nem egy egész szám! Kérlek adj meg egy egész számot: ");
-                    Console.ForegroundColor = ConsoleColor.White;
+                {
+                    continue;
                 }
             }
-            //7. Feladat.
-            Console.WriteLine("Kérlek add meg a kinti hőmérsékletet Celsiusban: ");
-            double homerseklet = Convert.ToDouble(Console.ReadLine());
-            if (homerseklet < 0)
+        }
+
+
+
+
+
+        static class Konzol
+        {
+            public static void Cim(string szoveg)
             {
-                Console.ForegroundColor = ConsoleColor.Blue;
-                Console.WriteLine("Fagy van.");
-                Console.ForegroundColor = ConsoleColor.White;
+                Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.WriteLine($"═══ {szoveg} ═══");
+                Console.ResetColor();
             }
-            else if (homerseklet >= 0 && homerseklet <= 15)
-            {
-                Console.WriteLine("Hűvös van.");
-            }
-            else if (homerseklet > 15 && homerseklet <= 25)
+
+            public static void Siker(string szoveg)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Kellemes az idő.");
-                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine($"✔ {szoveg}");
+                Console.ResetColor();
             }
-            else
+
+            public static void Hiba(string szoveg)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Meleg van."); 
-                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine($"✘ {szoveg}");
+                Console.ResetColor();
             }
-            //8. Feladat.
-            int osztalyzat = 0;
-            while (true)
+
+            public static void Menu(string szoveg, int sorszam = 0)
             {
-                Console.WriteLine("Kérlek add meg az osztályzatot (1-5): ");
-                if (true == int.TryParse(Console.ReadLine(), out osztalyzat) && osztalyzat >= 1 && osztalyzat <= 5)
+                if (sorszam == 0)
                 {
-                    switch (osztalyzat)
+                    Console.ForegroundColor = ConsoleColor.DarkCyan;
+                    Console.WriteLine($"{szoveg}");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                    Console.WriteLine($"{sorszam}. {szoveg}");
+                    Console.ResetColor();
+                }
+            }
+        }
+
+
+        internal class Program
+        {
+            static void Main(string[] args)
+            {
+                int kor = 0;
+                string nev = "";
+                while (true)
+                {
+                    Konzol.Cim("Főmenü");
+                    Konzol.Menu("Köszöntés: ", 1);
+                    Konzol.Menu("Név bekérése: ", 2);
+                    Konzol.Menu("Életkor bekérése: ", 3);
+                    Konzol.Menu("Adatok kiírása: ", 4);
+                    Konzol.Menu("Elköszönés: ", 5);
+                    Konzol.Menu("Kilépés: ", 6);
+                    Konzol.Menu("Választás:");
+                    char valasztottMenupont = '0';
+                    ConsoleKeyInfo menupont = Console.ReadKey(true);
+                    valasztottMenupont = menupont.KeyChar;
+
+                    switch (valasztottMenupont)
                     {
-                        case 1:
-                            Console.WriteLine("Elégtelen");
+                        case '1':
+                            Console.WriteLine("Üdvözlet a programunkban!");
+                            Thread.Sleep(2000);
+                            Console.Clear();
                             break;
-                        case 2:
-                            Console.WriteLine("Elégséges");
+
+                        case '2':
+                            Console.Write("Add meg a neved: ");
+                            nev = Console.ReadLine();
+                            Console.WriteLine($"Üdvözöllek, {nev}!");
+                            Console.Clear();
                             break;
-                        case 3:
-                            Console.WriteLine("Közepes");
+
+                        case '3':
+                            Console.Write("Add meg az életkorod: ");
+                            bool siker = false;
+                            while (!siker)
+                            {
+                                siker = int.TryParse(Console.ReadLine(), out kor);
+                                if (kor > 110 || kor < 0)
+                                {
+                                    siker = false;
+                                }
+                            }
+                            Console.WriteLine($"Az életkorod: {kor}");
+                            Console.Clear();
                             break;
-                        case 4:
-                            Console.WriteLine("Jó");
+
+                        case '4':
+                            if (!string.IsNullOrEmpty(nev) && kor > 0)
+                            {
+                                Console.WriteLine("\nA megadott adatok:");
+                                Console.WriteLine($"Név: {nev}");
+                                Console.WriteLine($"Életkor: {kor}");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Kérlek, adj meg minden adatot!");
+                            }
+                            Console.Clear();
                             break;
-                        case 5:
-                            Console.WriteLine("Jeles");
+
+                        case '5':
+                            Console.WriteLine("Köszönjük a használatot!");
+                            Thread.Sleep(2000);
+                            Console.Clear();
+                            break;
+
+                        case '6':
+                            Console.WriteLine("Kilépés...");
+                            Environment.Exit(0);
+                            Console.Clear();
+                            break;
+
+                        case '7':
+                            Console.Clear();
+                            Console.ForegroundColor = ConsoleColor.Blue;
+                            Console.WriteLine("\nTitkos menüpont! Találd ki a számot 0 és 100 között!");
+                            Console.ForegroundColor = ConsoleColor.White;
+                            SzamJatek();
+                            Console.Clear();
+                            break;
+
+                        default:
+                            Console.WriteLine("ILYEN OPCIÓD NINCSEN!");
+                            Console.Clear();
                             break;
                     }
-                    break;
                 }
-                else
-                {
-                    Konzol.Hiba("Hibás osztályzat! Kérlek adj meg egy 1-5 közötti számot.");
-                }
-            }
-            //9. Feladat.
-            Console.WriteLine("Add meg hány pontos a dolgozatod (0-100): ");
-            if (!int.TryParse(Console.ReadLine(), out int pontszam))
-            {
-                Konzol.Hiba("Hibás bevitel — egész számot adj meg.");
-            }
-            else
-            {
-                switch (pontszam)
-                {
-                    case >= 0 and <= 39:
-                        Console.WriteLine("Elégtelen");
-                        break;
-                    case >= 40 and <= 54:
-                        Console.WriteLine("Elégséges");
-                        break;
-                    case >= 55 and <= 69:
-                        Console.WriteLine("Közepes");
-                        break;
-                    case >= 70 and <= 84:
-                        Console.WriteLine("Jó");
-                        break;
-                    case >= 85 and <= 100:
-                        Console.WriteLine("Jeles");
-                        break;
-                    default:
-                        Konzol.Hiba("Az értéknek 0 és 100 közé kell esnie.");
-                        break;
-                }
-            }
-            //10. Feladat.
-            Console.WriteLine("Adj meg egy hónapot (1-12): ");
-            int honap = Convert.ToInt32(Console.ReadLine());
-            switch (honap)
-            {
-                case 1:
-                    Console.WriteLine($" A Január 31 napos");
-                    break;
-                case 2:
-                    Console.WriteLine("A Február 28 napos");
-                    break;
-                case 3:
-                    Console.WriteLine("A Március 31 napos");
-                    break;
-                case 4:
-                    Console.WriteLine("Az Április 30 napos");
-                    break;
-                case 5:
-                    Console.WriteLine("A Május 31 napos");
-                    break;
-                case 6:
-                    Console.WriteLine("A Június 30 napos");
-                    break;
-                case 7:
-                    Console.WriteLine("A Július 31 napos");
-                    break;
-                case 8:
-                    Console.WriteLine("Az Augusztus 31 napos");
-                    break;
-                case 9:
-                    Console.WriteLine("A Szeptember 30 napos");
-                    break;
-                case 10:
-                    Console.WriteLine("Az Október 31 napos");
-                    break;
-                case 11:
-                    Console.WriteLine("A November 30 napos");
-                    break;
-                case 12:
-                    Console.WriteLine("A December 31 napos");
-                    break;
-                default:
-                    Konzol.Hiba("Hibás hónap! Kérlek adj meg egy 1-12 közötti számot.");
-                    break;
-            }
-            //11. Feladat.
-            Console.WriteLine("Add meg az életkorodat: ");
-            kor = Convert.ToInt32(Console.ReadLine());
-            switch (kor)
-            {
-                case >= 0 and <= 5: 
-                    Console.WriteLine("A belépőjegy ingyenes."); 
-                    break;
-                case >= 6 and <= 17:
-                    Console.WriteLine("A belépőjegy ára: 1500 Ft. (diák)");
-                    break;
-                case >= 18 and <= 64:
-                    Console.WriteLine("A belépőjegy ára: 2800 Ft. (felnőtt)");
-                    break;
-                case >= 65 and <= 120:
-                    Console.WriteLine("A belépőjegy ára: 2000 Ft. (nyugdíjas)");
-                    break;
-                default:
-                    Konzol.Hiba("Az életkor nem megfelelő! Kérlek adj meg egy 0 és 120 közötti életkort.");
-                    break;
-            }
-            //12. Feladat.
-            Console.WriteLine("Adj meg EGY darab betűt (A-Z) (angol abc): ");
-            char betu = Convert.ToChar(Console.ReadLine().ToUpper());
-            switch (betu){ 
-                case 'A' or 'E' or 'I' or 'O' or 'U':
-                Console.WriteLine($"A(z) {betu} magánhangzó.");
-                break;
             }
         }
     }
